@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Timers;
+using System.ComponentModel;
 
 namespace TaskMonitor
 {
@@ -119,18 +120,41 @@ namespace TaskMonitor
 		}
 		private static void CheckProcess(object sender, ElapsedEventArgs e)
 		{
+			System.Timers.Timer timer = (System.Timers.Timer)sender;
 			if (DateTime.Now > terminationDate)
 			{
-				System.Timers.Timer timer = (System.Timers.Timer)sender;
+				
 				timer.Enabled = false;
 				StopProcess();
+			}
+			else
+			{
+				if (!ProcessExists(((Process)monitoredProcesses.GetValue(0)).ProcessName))
+				{
+					timer.Enabled=false;
+                    Console.WriteLine("Process was stopped outside of monitor app.");
+
+                }
 			}
 				
 		}
 		static void StopProcess()
 		{
 			foreach (Process process in monitoredProcesses) {
-			process.Kill();
+				try
+				{
+					process.Kill();
+				}
+				catch (Win32Exception ex)
+				{
+					if (ex.NativeErrorCode == 5)
+						Console.WriteLine("The process requires this app to be ran with administrator/system access for process kill");
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine("Could not kill one of sub-processes, because of unknown exception. Exception: " + ex.Message);
+				}
+
 			}
 			Environment.Exit(0);
 		}
