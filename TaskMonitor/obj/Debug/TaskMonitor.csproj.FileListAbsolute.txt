@@ -1,0 +1,9 @@
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\bin\Debug\TaskMonitor.exe.config
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\bin\Debug\TaskMonitor.exe
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\bin\Debug\TaskMonitor.pdb
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\obj\Debug\TaskMonitor.csproj.AssemblyReference.cache
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\obj\Debug\TaskMonitor.TaskMonitor.resources
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\obj\Debug\TaskMonitor.csproj.GenerateResource.cache
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\obj\Debug\TaskMonitor.csproj.CoreCompileInputs.cache
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\obj\Debug\TaskMonitor.exe
+C:\Users\rejze\Desktop\Programování\C#\task management\TaskMonitor\TaskMonitor\obj\Debug\TaskMonitor.pdb
