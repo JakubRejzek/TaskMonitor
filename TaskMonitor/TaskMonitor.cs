@@ -13,17 +13,14 @@ namespace TaskMonitor
 {
 	public partial class TaskMonitor : Form
 	{
-
-		List<MonitorableProcess> processList {  get; set; }
-		DataTable dt = new DataTable();
+		public bool lockedMonitoring = false;
+		public string lastMonitoredProcess = "";
+		BindingList<MonitorableProcess> processList {  get; set; }
 		public TaskMonitor()
 		{
 			InitializeComponent();
-			dt.Columns.Add("Process name", typeof(string));
-			dt.Columns.Add("Termination date", typeof(DateTime));
-			dt.Columns.Add("Monitored", typeof(bool));
-			dt.Columns.Add("Dead", typeof(bool));
-			dataGridView1.DataSource = dt;
+			processList = MonitorableProcess.GetMonitorableProcesses();
+			dataGridView1.DataSource = processList;
 			dataGridView1.Columns[0].MinimumWidth = 80;
 			dataGridView1.Columns[1].MinimumWidth = 80;
 			dataGridView1.Columns[2].Width = 50;
@@ -31,26 +28,17 @@ namespace TaskMonitor
 		}
 		public void RefreshTable()
 		{
-			dt.Rows.Clear();
-			foreach (MonitorableProcess process in processList)
-			{
-				dt.Rows.Add(
-					process.processName,
-					process.terminationDate,
-					process.monitored,
-					process.dead);
-			}
+			dataGridView1.Refresh();
+			label5.Text = lastMonitoredProcess;
 		}
 
 		private void TaskMonitor_Load(object sender, EventArgs e)
 		{
-			processList = MonitorableProcess.GetMonitorableProcesses();
 			button1_Click(sender, e);
 		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			processList = MonitorableProcess.GetMonitorableProcesses();
 			RefreshTable();
 		}
 
@@ -74,17 +62,30 @@ namespace TaskMonitor
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			MonitorableProcess selectedProcess = processList[dataGridView1.CurrentCell.RowIndex];
-			if(numericUpDown2.Value >= numericUpDown1.Value)
+			if (!lockedMonitoring)
 			{
-				numericUpDown1.Value = (decimal)(numericUpDown2.Value > 10 ? 10 : 0.5);
+				MonitorableProcess selectedProcess = processList[dataGridView1.CurrentCell.RowIndex];
+				if (numericUpDown2.Value >= numericUpDown1.Value)
+				{
+					numericUpDown1.Value = (decimal)(numericUpDown2.Value > 10 ? 10 : 0.5);
+				}
+				selectedProcess.StartMonitoring(
+					DateTime.Now.AddMinutes((double)numericUpDown2.Value),
+					(numericUpDown1.Value),
+					this);
+				numericUpDown1.Enabled = false;
+				numericUpDown2.Enabled = false;
+				lockedMonitoring = true;
 			}
-			selectedProcess.StartMonitoring(
-				DateTime.Now.AddMinutes((double)numericUpDown2.Value),
-				(numericUpDown1.Value),
-				this);
-			numericUpDown1.Enabled = false;
-			numericUpDown2.Enabled = false;
+			else
+			{
+				MessageBox.Show("You are already monitoring a process. Monitoring multiple processes at the same time can create unwanted behaviour");
+			}
+		}
+
+		private void label4_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

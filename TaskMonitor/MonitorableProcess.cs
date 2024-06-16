@@ -16,10 +16,10 @@ namespace TaskMonitor
 	{
 		private Process[] innerProcess;
 		private System.Timers.Timer timer;
-		public string processName;
-		public Nullable<DateTime> terminationDate = null;
-		public bool monitored = false;
-		public bool dead = false;
+		public string processName { get; set; }
+		public Nullable<DateTime> terminationDate { get; set; } = null;
+		public bool monitored { get; set; } = false;
+		public bool dead { get; set; } = false;
 		TaskMonitor monitor;
 		public MonitorableProcess(Process[] innerProcess, string processName)
 		{
@@ -34,6 +34,7 @@ namespace TaskMonitor
 			timer.Enabled = true;
 			this.monitor = monitor;
 			this.monitored = true;
+			monitor.lastMonitoredProcess = processName;
 			monitor.RefreshTable();
 		}
 		private void CheckProcess(object sender, ElapsedEventArgs e)
@@ -43,10 +44,12 @@ namespace TaskMonitor
 			{
 				timer.Enabled = false;
 				dead = true;
-				monitor.RefreshTable();
+				monitor.lockedMonitoring = false;
+				MessageBox.Show("Process ended without intervention");
 			}
 			else if(DateTime.Now >= terminationDate)
 			{
+				bool withErrors = false;
 				foreach (Process process in innerProcess) {
 					try
 					{
@@ -54,22 +57,28 @@ namespace TaskMonitor
 					}
 					catch(Win32Exception ex)
 					{
+						withErrors = true;
 						if(ex.NativeErrorCode == 5)
 							MessageBox.Show("The process requires this app to be ran with administrator/system access for process kill");
 					}
 					catch (Exception ex) {
+						withErrors = true;
 						MessageBox.Show("Could not kill one of sub-processes of " + processName +", because of unknown exception. Exceptions: "+ ex.Message);
 					}
 				}
-				dead = true;
+				dead = !withErrors;
+				if (withErrors)
+					MessageBox.Show("Some of sub-processes were not killed successfully.");
+				else
+					MessageBox.Show("Process was killed successfully");
 				timer.Enabled = false;
-				monitor.RefreshTable();
+				monitor.lockedMonitoring=false;
 			}
 		}
 
-		public static List<MonitorableProcess> GetMonitorableProcesses()
+		public static BindingList<MonitorableProcess> GetMonitorableProcesses()
 		{
-			List<MonitorableProcess> result = new List<MonitorableProcess>();
+			BindingList<MonitorableProcess> result = new BindingList<MonitorableProcess>();
 			var ProcessNames = from p in Process.GetProcesses()
 							   group p by p.ProcessName into c
 							   select c.Key;
@@ -77,10 +86,15 @@ namespace TaskMonitor
 			{
 				result.Add(new MonitorableProcess(Process.GetProcessesByName(processName), processName));
 			}
-			result = (from p in result
-					  orderby p.monitored == true, p.processName ascending
-					  select p)
-						  .ToList();
+			result = new BindingList<MonitorableProcess>
+					(
+						(
+							from p in result
+							orderby p.monitored == true, p.processName ascending
+							select p
+						)
+					.ToList()
+					);
 			return result;
 		}
 	}
