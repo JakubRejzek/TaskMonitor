@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskMonitor", "TaskMonitor\TaskMonitor.csproj", "{9C87E3F1-F897-4D31-94B3-CB6A0CD21BF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Junit tests", "Junit tests\Junit tests.csproj", "{C001B936-C918-4DE8-BCA7-282C53F179CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9C87E3F1-F897-4D31-94B3-CB6A0CD21BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C87E3F1-F897-4D31-94B3-CB6A0CD21BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C87E3F1-F897-4D31-94B3-CB6A0CD21BF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C001B936-C918-4DE8-BCA7-282C53F179CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C001B936-C918-4DE8-BCA7-282C53F179CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C001B936-C918-4DE8-BCA7-282C53F179CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C001B936-C918-4DE8-BCA7-282C53F179CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
